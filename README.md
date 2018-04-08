@@ -3,3 +3,6 @@ Atmel AVR compatible library implementing an interface to the Siedle "in-home-bu
 
 This circuit provides a physical interface to the bus:
 ![interface circuit](/interface.png)
+
+This library has been tested with an attiny2313, but it can easily be adapted to work on other Attiny and ATmega devices. Using the circuit below, the whole device can be powered by the bus. Note the comments at the serial interface!
+![attiny and supply](/attiny2313example.png)
