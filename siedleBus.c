@@ -73,10 +73,6 @@ void siedleSetup(void) {
 	/* Prepare external Interrupt */
 	configureExtInt;
 	/* Prepare timer */
-	/*clearWaveformReg;
-	resetTimer;
-	stopTimer;
-	enableCompareMatchInt;*/
 	purgeTimer();
 	/* Wait about 100ms */
 	internalState=GAP_WAIT;
