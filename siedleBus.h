@@ -19,8 +19,6 @@
 */
 volatile uint8_t dataOut[4];
 volatile uint8_t dataIn[4];
-//volatile uint8_t siedleRecState;
-
 
 extern uint8_t siedleGetFrame(void);
 extern uint8_t siedleRecRestart(void);

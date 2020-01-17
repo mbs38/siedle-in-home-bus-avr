@@ -1,9 +1,6 @@
 #include <avr/io.h>
 #include "siedleBus.h"
 #include <avr/interrupt.h>
-//#include "listToolsMB.h"
-
-
 
 volatile uint8_t dataOut[] = {0,0,0,0};
 volatile uint8_t dataIn[] = {0,0,0,0};
@@ -60,17 +57,11 @@ uint8_t siedleGetFrame(void) {
 }
 
 uint8_t siedleRecRestart(void) {
-	if (1)
-	{
-		siedleRecState=0;
-	//	resetTimer;
-		bitCount=0;
-		internalState=IDLE;
-		//configureExtInt;
-		clearExtIntFlag;
-		enableExtInt;
-		//clearExtIntFlag;
-	}
+	siedleRecState=0;
+	bitCount=0;
+	internalState=IDLE;
+	clearExtIntFlag;
+	enableExtInt;
 	return 0;
 }
 
@@ -107,13 +98,9 @@ uint8_t siedleSendRaw(uint8_t *data) {
 			dataOut[c]=data[c];
 		}
 		purgeTimer();
-		//stopTimer;
 		internalState=SEND;
-		//clearWaveformReg;
-		//resetTimer;
 		setCompareMatch1ms;
 		bitCount=0;
-		//enableCompareMatchInt;
 		startTimer;
 		return 1;
 	}
@@ -121,7 +108,6 @@ uint8_t siedleSendRaw(uint8_t *data) {
 }
 
 ISR(timerCompIntVect) {
-	//stopTimer;
 	purgeTimer();
 	switch(internalState) {
 		case RECEIVE: {
@@ -143,10 +129,6 @@ ISR(timerCompIntVect) {
 				} else {
 					siedleRecState = REC_FIN;
 				}
-				//stopTimer;
-				//clearWaveformReg;
-				//resetTimer;
-				//purgeTimer();
 				/* Wait ~100ms */
 				internalState=GAP_WAIT;
 				bitCount=0;
@@ -154,7 +136,6 @@ ISR(timerCompIntVect) {
 				startTimer;
 			} else {
 				setCompareMatch2ms;
-				//resetTimer;
 				startTimer;
 			}
 		}
@@ -165,7 +146,6 @@ ISR(timerCompIntVect) {
 				load10OhmOff;
 				load200OhmOff;
 				bitCount=0;
-				//resetTimer;
 				/* Wait ~100ms */
 				internalState=GAP_WAIT;
 				setCompareMatchMax;	
@@ -179,7 +159,6 @@ ISR(timerCompIntVect) {
 					load10OhmOn;
 				}
 				setCompareMatch2ms;
-				//resetTimer;
 				startTimer;
 				bitCount++;
 			}
@@ -188,21 +167,14 @@ ISR(timerCompIntVect) {
 		case GAP_WAIT: {
 			if (bitCount==gapSize)
 			{
-				//UDR='G';
 				if (siedleRecState!=REC_FIN)
-				{/*
-					resetTimer;
-					internalState=IDLE;
-					clearExtIntFlag;
-					enableExtInt;*/
-					//internalState=IDLE;
+				{
 					siedleRecRestart();
 				} else {
 					internalState=IDLE;
 				}
 			} else {
 				bitCount++;
-				//resetTimer;
 				setCompareMatchMax;
 				startTimer;
 			}
@@ -215,11 +187,9 @@ ISR(extIntVect) {
 	siedleRecState = 0;
 	bitCount = 0;
 	internalState=RECEIVE;
-	//purgeTimer(); using this will take way more flash space
 	clearWaveformReg;
 	resetTimer;
 	setCompareMatch1ms;
 	startTimer;
 	disableExtInt;
-	//UDR='F';
 }
